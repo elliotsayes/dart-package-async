@@ -149,16 +149,17 @@ class StreamSplitter<T> {
     }
   }
 
-  /// Pauses [_subscription] if every controller is paused.
+  /// Pauses [_subscription] if any controller is paused.
   void _onPause() {
-    if (!_controllers.every((controller) => controller.isPaused)) return;
+    if (!_controllers.any((controller) => controller.isPaused)) return;
     _subscription!.pause();
   }
 
-  /// Resumes [_subscription].
+  /// Resumes [_subscription] if all controllers are resumed.
   ///
   /// If [_subscription] wasn't paused, this is a no-op.
   void _onResume() {
+    if (!_controllers.every((controller) => !controller.isPaused)) return;
     _subscription!.resume();
   }
 
